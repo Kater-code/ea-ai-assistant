@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 """
 EA AI Assistant — Streamlit UI
 Run with: streamlit run app.py
@@ -64,3 +65,6 @@ if prompt := st.chat_input("Ask about your EA documents..."):
         st.markdown(answer)
 
     st.session_state.messages.append({"role": "assistant", "content": answer})
+=======
+
+>>>>>>> 72790fd226f29204cc289b42a3ee61eea802bfba
