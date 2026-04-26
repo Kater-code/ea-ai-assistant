@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 """
 EA AI Assistant — Streamlit UI
 Run with: streamlit run app.py
@@ -9,8 +8,11 @@ import tempfile
 from pathlib import Path
 
 import streamlit as st
+from dotenv import load_dotenv
 
 from rag.pipeline import ingest_document, query
+
+load_dotenv()
 
 st.set_page_config(
     page_title="EA AI Assistant",
@@ -44,7 +46,7 @@ with st.sidebar:
 
     st.divider()
     st.markdown("**Stack**")
-    st.code("OpenAI · ChromaDB · LangChain · Streamlit", language=None)
+    st.code("OpenAI · ChromaDB · Streamlit", language=None)
     st.markdown("*Swap OpenAI → Mistral 7B for full on-premise*")
 
 if "messages" not in st.session_state:
@@ -65,6 +67,3 @@ if prompt := st.chat_input("Ask about your EA documents..."):
         st.markdown(answer)
 
     st.session_state.messages.append({"role": "assistant", "content": answer})
-=======
-
->>>>>>> 72790fd226f29204cc289b42a3ee61eea802bfba

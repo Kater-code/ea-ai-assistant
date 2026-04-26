@@ -1,66 +1,52 @@
-"""
-EA AI Assistant — Streamlit UI
-Run with: streamlit run app.py
-"""
+# EA AI Assistant
 
-import os
-import tempfile
-from pathlib import Path
+> On-premise AI assistant for Enterprise Architects in regulated industries.
 
-import streamlit as st
+Bachelor's thesis project @ Czech University of Life Sciences Prague (CZU) — and a real B2B MVP.
 
-from rag.pipeline import ingest_document, query
+---
 
-st.set_page_config(
-    page_title="EA AI Assistant",
-    page_icon="🏗️",
-    layout="wide",
-)
+## Problem
 
-st.title("🏗️ EA AI Assistant")
-st.caption("On-premise AI assistant for Enterprise Architects · Powered by RAG")
+Banks, insurance companies, and government institutions in the CEE region cannot use cloud AI (ChatGPT, Copilot) due to GDPR and data sovereignty requirements. Their EA teams still need AI help for documentation, gap analysis, and architectural decisions.
 
-with st.sidebar:
-    st.header("📄 Documents")
-    uploaded = st.file_uploader(
-        "Upload a document (.txt or .md)",
-        type=["txt", "md"],
-        accept_multiple_files=True,
-    )
+## Solution
 
-    if uploaded:
-        for file in uploaded:
-            with tempfile.NamedTemporaryFile(
-                delete=False, suffix=Path(file.name).suffix, mode="wb"
-            ) as tmp:
-                tmp.write(file.read())
-                tmp_path = tmp.name
+A web application with a RAG pipeline that runs fully on-premise. Upload your internal EA documents — the assistant answers questions based only on them. No data leaves the company.
 
-            with st.spinner(f"Ingesting {file.name}..."):
-                n = ingest_document(tmp_path)
-            os.unlink(tmp_path)
-            st.success(f"✓ {file.name} — {n} chunks indexed")
+## Demo
 
-    st.divider()
-    st.markdown("**Stack**")
-    st.code("OpenAI · ChromaDB · LangChain · Streamlit", language=None)
-    st.markdown("*Swap OpenAI → Mistral 7B for full on-premise*")
+![Demo](docs/demo.png)
 
-if "messages" not in st.session_state:
-    st.session_state.messages = []
+![Demo 2](docs/demo2.png)
 
-for msg in st.session_state.messages:
-    with st.chat_message(msg["role"]):
-        st.markdown(msg["content"])
+## Stack
 
-if prompt := st.chat_input("Ask about your EA documents..."):
-    st.session_state.messages.append({"role": "user", "content": prompt})
-    with st.chat_message("user"):
-        st.markdown(prompt)
+| Layer | Technology |
+|---|---|
+| UI | Streamlit |
+| LLM | OpenAI gpt-4o-mini (dev) · Mistral 7B (on-premise) |
+| Embeddings | text-embedding-3-small |
+| Vector DB | ChromaDB |
+| Deployment | Docker (planned) |
 
-    with st.chat_message("assistant"):
-        with st.spinner("Searching documents..."):
-            answer = query(prompt)
-        st.markdown(answer)
+## Quick Start
 
-    st.session_state.messages.append({"role": "assistant", "content": answer})
+    git clone https://github.com/Kater-code/ea-ai-assistant
+    cd ea-ai-assistant
+    pip install -r requirements.txt
+    echo 'OPENAI_API_KEY=your_key' > .env
+    streamlit run app.py
+
+## Status
+
+🚧 Active development — thesis defense: July 2026
+
+Done: RAG pipeline, Streamlit UI, ChromaDB
+In progress: FastAPI backend, Docker
+Planned: QLoRA fine-tuning on Mistral 7B
+
+## Author
+
+Ekaterina Sarycheva — CZU Prague
+sarychevaa.katerina@gmail.com
