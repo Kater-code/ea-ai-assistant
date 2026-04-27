@@ -7,7 +7,7 @@ import os
 from pathlib import Path
 
 from dotenv import load_dotenv
-load_dotenv()  # загружает .env автоматически
+load_dotenv()  
 
 import chromadb
 from chromadb.utils import embedding_functions
